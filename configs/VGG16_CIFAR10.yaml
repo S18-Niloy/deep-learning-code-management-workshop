@@ -7,7 +7,7 @@ project_config:
 modelmodule_config:
   name: VGG16
   param:
-    lr: 0.1
+    lr: 0.0001
     num_classes: 10
     lrs_step_size: 1
     lrs_gamma: 0.9
@@ -16,7 +16,7 @@ datamodule_config:
   name: CIFAR10
   param:
       data_path: __data__
-      batch_size: 512
+      batch_size: 128
       test_batch_size: 1024
       num_workers: 8
       shuffle: true
@@ -32,8 +32,8 @@ datamodule_config:
             always_apply: false
             p: 0.5
           - __class_fullname__: Normalize
-            mean: [0, 0, 0]
-            std: [1, 1, 1]
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
             max_pixel_value: 255
             always_apply: true
             p: 1.0
@@ -47,8 +47,8 @@ datamodule_config:
           p: 1.0
           transforms:
           - __class_fullname__: Normalize
-            mean: [0, 0, 0]
-            std: [1, 1, 1]
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225]
             max_pixel_value: 255
             always_apply: true
             p: 1.0
@@ -69,8 +69,8 @@ trainer_config:
     - name: ModelCheckpoint
       param:
         filename: *best_ckpt_name
-        monitor: 'F1'
-        mode: 'max'
+        monitor: 'val_loss'
+        mode: 'min'
         save_last: true
         verbose: true
   logger:

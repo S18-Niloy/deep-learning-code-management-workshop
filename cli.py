@@ -1,13 +1,9 @@
 import click
-import yaml
-import importlib
 import pytorch_lightning as pl
-import torch
-import os
-import torchvision
-from utils.config import Config
-from pytorch_lightning import seed_everything
 import wandb
+from pytorch_lightning import seed_everything
+
+from utils.config import Config
 
 seed_everything(42, workers=True)
 

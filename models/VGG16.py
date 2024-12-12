@@ -1,12 +1,12 @@
 import pytorch_lightning as pl
-import torchmetrics
-from torchmetrics import F1Score, JaccardIndex, MetricCollection, ConfusionMatrix
-from torchmetrics.wrappers import MultitaskWrapper, ClasswiseWrapper
+import timm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.optim.lr_scheduler import LambdaLR, StepLR, ReduceLROnPlateau, OneCycleLR, PolynomialLR
-from torchvision import models
+from torch.optim.lr_scheduler import StepLR
+from torchmetrics import F1Score, MetricCollection
+from torchmetrics.wrappers import ClasswiseWrapper
+
 
 class VGG16(pl.LightningModule):
     def __init__(self, **kwargs):
@@ -22,14 +22,11 @@ class VGG16(pl.LightningModule):
         self.save_hyperparameters()
         self.hparams.class_labels = self.class_labels if isinstance(self.class_labels, list) else self.class_labels.replace(" ", "").split(",")
 
-        self.model = models.vgg16(weights=models.VGG16_Weights.DEFAULT)
-        self.model.classifier[6] = torch.nn.Linear(4096, self.num_classes)
+        self.model = timm.create_model('vgg16', pretrained=True, num_classes=self.num_classes)
 
         self.metric = MetricCollection({
             "F1": F1Score('multiclass', num_classes=self.num_classes, average='macro'),
-            # "IoU": JaccardIndex('multiclass', num_classes=self.num_classes, average='macro'),
             "class_F1": ClasswiseWrapper(F1Score('multiclass', num_classes=self.num_classes, average=None), labels=self.hparams.class_labels, prefix="F1_"),
-            # "class_IoU": ClasswiseWrapper(JaccardIndex('multiclass', num_classes=self.num_classes, average=None), labels=self.hparams.class_labels, prefix="IoU_"),
         })
 
     def forward(self, x):
@@ -41,8 +38,6 @@ class VGG16(pl.LightningModule):
         logits = self(x)
 
         loss = nn.CrossEntropyLoss(reduction='none')(logits, y).mean()
-
-        # self.log("loss", loss, on_step=False, on_epoch=True, prog_bar=False, logger=True, sync_dist=False)
 
         return loss
     
