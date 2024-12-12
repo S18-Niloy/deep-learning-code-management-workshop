@@ -1,7 +1,9 @@
-import yaml
 import importlib
-import pytorch_lightning as pl
 import os
+
+import pytorch_lightning as pl
+import yaml
+
 
 class Config:
     def __init__(self, config_filepath):
