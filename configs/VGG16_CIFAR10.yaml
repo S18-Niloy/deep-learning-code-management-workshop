@@ -9,7 +9,7 @@ modelmodule_config:
   param:
     lr: 0.001
     num_classes: 10
-    lrs_step_size: 1
+    lrs_step_size: 1 #scheduler config
     lrs_gamma: 0.9
     class_labels: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
 datamodule_config:
@@ -79,7 +79,7 @@ trainer_config:
         save_dir: *log_dir
         name: *name
         version: *version
-    - name: WandbLogger
+    - name: WandbLogger # a board to watch training and testing stats like tensorboard
       param:
         save_dir: *log_dir
         project: *name
@@ -96,4 +96,4 @@ test_trainer_config:
         save_dir: *log_dir
         name: *name
         version: *test_version
-wandb_key: null
+wandb_key: e39f9e23e2f8e40e9d79ceacf73f98da595af506 # api key

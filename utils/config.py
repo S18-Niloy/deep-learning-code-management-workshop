@@ -12,7 +12,7 @@ class Config:
 
     def get_datamodule(self):
         # Dynamically import the DataModule class from the 'data' directory
-        datamodule_module = importlib.import_module('data.' + self.config['datamodule_config']['name'])
+        datamodule_module = importlib.import_module('data.' + self.config['datamodule_config']['name']) # from the config
         DataModuleClass = getattr(datamodule_module, self.config['datamodule_config']['name'])
 
         # Create DataModule instance
@@ -28,7 +28,7 @@ class Config:
 
     def get_trainer_config(self):
         # Extract callbacks and loggers configurations
-        callbacks_config = self.config['trainer_config']['callbacks']
+        callbacks_config = self.config['trainer_config']['callbacks'] 
         loggers_config = self.config['trainer_config']['logger']
 
         # Instantiate callbacks and loggers using the provided configurations

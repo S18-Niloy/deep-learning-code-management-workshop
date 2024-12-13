@@ -106,7 +106,7 @@ Use the `cli.py` command line interface to train and test experiments. For examp
 
 ```bash
 
-python cli.py train --config configs/train_config.yaml
+python cli.py train --config configs/VGG16_CIFAR10.yaml
 python cli.py test --config configs/test_config.yaml`
 ```
 
