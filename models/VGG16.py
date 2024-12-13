@@ -23,9 +23,13 @@ class VGG16(pl.LightningModule):
         self.hparams.class_labels = self.class_labels if isinstance(self.class_labels, list) else self.class_labels.replace(" ", "").split(",")
 
         self.model = timm.create_model('vgg16', pretrained=True, num_classes=self.num_classes)
+        
+        # loop through all the params and require grad = false
+        #If layer isinstance nn.linear require grad = True
 
         self.metric = MetricCollection({
             "F1": F1Score('multiclass', num_classes=self.num_classes, average='macro'),
+            
             "class_F1": ClasswiseWrapper(F1Score('multiclass', num_classes=self.num_classes, average=None), labels=self.hparams.class_labels, prefix="F1_"),
         })
 
